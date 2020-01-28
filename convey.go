@@ -42,14 +42,14 @@ const (
 )
 
 func GetConveyHosts() []string {
-	if bcgo.IsDebug() {
+	if bcgo.IsLive() {
 		return []string{
-			"test-convey.aletheiaware.com",
+			"convey-nyc.aletheiaware.com",
+			"convey-sfo.aletheiaware.com",
 		}
 	}
 	return []string{
-		"convey-nyc.aletheiaware.com",
-		"convey-sfo.aletheiaware.com",
+		"test-convey.aletheiaware.com",
 	}
 }
 
