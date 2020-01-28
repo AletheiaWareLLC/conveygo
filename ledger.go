@@ -100,16 +100,7 @@ func NewLedger(node *bcgo.Node) *Ledger {
 		Sold:      make(map[string]uint64),
 		Earned:    make(map[string]uint64),
 		Spent:     make(map[string]uint64),
-		Trigger:   make(chan bool),
 	}
-	go func() {
-		for ok := true; ok; ok = <-ledger.Trigger {
-			if err := ledger.updateAll(); err != nil {
-				log.Println(err)
-				return
-			}
-		}
-	}()
 	return ledger
 }
 
@@ -205,7 +196,7 @@ type MessageNode struct {
 	Previous string
 }
 
-func (l *Ledger) update(name string, hash []byte) error {
+func (l *Ledger) Update(name string, hash []byte) error {
 	if hash == nil {
 		return nil
 	}
@@ -364,15 +355,32 @@ func (l *Ledger) update(name string, hash []byte) error {
 	return nil
 }
 
-func (l *Ledger) updateAll() error {
+func (l *Ledger) UpdateAll() error {
 	for _, channel := range l.Node.GetChannels() {
-		if err := l.update(channel.Name, channel.Head); err != nil {
+		if err := l.Update(channel.Name, channel.Head); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
+func (l *Ledger) Start() {
+	l.Trigger = make(chan bool)
+	for ok := true; ok; ok = <-l.Trigger {
+		if err := l.UpdateAll(); err != nil {
+			log.Println(err)
+			return
+		}
+	}
+}
+
+func (l *Ledger) Stop() {
+	close(l.Trigger)
+	l.Trigger = nil
+}
+
 func (l *Ledger) TriggerUpdate() {
-	l.Trigger <- true
+	if l.Trigger != nil {
+		l.Trigger <- true
+	}
 }

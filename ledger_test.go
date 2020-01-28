@@ -171,7 +171,7 @@ func TestLedger(t *testing.T) {
 		testinggo.AssertNoError(t, store.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
 
 		ledger := conveygo.NewLedger(node)
-		ledger.TriggerUpdate()
+		testinggo.AssertNoError(t, ledger.UpdateAll())
 		log.Println("Conversation Record:", conveygo.Cost(conversationRecord))
 		log.Println("Message Record:", conveygo.Cost(messageRecord))
 
@@ -231,7 +231,7 @@ func TestLedger(t *testing.T) {
 		testinggo.AssertNoError(t, store.AddMessage(conversationHash, replyHash, replyRecord))
 
 		ledger := conveygo.NewLedger(node)
-		ledger.TriggerUpdate()
+		testinggo.AssertNoError(t, ledger.UpdateAll())
 		log.Println("Conversation Record:", conveygo.Cost(conversationRecord))
 		log.Println("Message Record:", conveygo.Cost(messageRecord))
 		log.Println("Reply Record:", conveygo.Cost(replyRecord))
@@ -310,7 +310,7 @@ func TestLedger(t *testing.T) {
 		testinggo.AssertNoError(t, store.AddMessage(conversationHash, reply3Hash, reply3Record))
 
 		ledger := conveygo.NewLedger(node)
-		ledger.TriggerUpdate()
+		testinggo.AssertNoError(t, ledger.UpdateAll())
 		log.Println("Conversation Record:", conveygo.Cost(conversationRecord))
 		log.Println("Message Record:", conveygo.Cost(messageRecord))
 		log.Println("Reply 1 Record:", conveygo.Cost(reply1Record))
