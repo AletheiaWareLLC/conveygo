@@ -126,10 +126,11 @@ func (s *MemoryStore) GetConversation(conversationHash []byte) (*Listing, error)
 	}, nil
 }
 
-func (s *MemoryStore) GetAllConversations(since uint64) ([]*Listing, error) {
+func (s *MemoryStore) GetAllConversations(from, to uint64) ([]*Listing, error) {
 	var listings []*Listing
 	for conversationHashString, value := range s.Conversations {
-		if s.Timestamps[conversationHashString] >= since {
+		t := s.Timestamps[conversationHashString]
+		if t >= from && t <= to {
 			conversationHash, err := base64.RawURLEncoding.DecodeString(conversationHashString)
 			if err != nil {
 				return nil, err

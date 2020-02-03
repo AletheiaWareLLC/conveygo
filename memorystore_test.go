@@ -114,8 +114,11 @@ func TestMemoryStore(t *testing.T) {
 		t.Run("NotEmpty", func(t *testing.T) {
 			testConversationStore_GetAllConversations_NotEmpty(t, conveygo.NewMemoryStore(), alias, key)
 		})
-		t.Run("Since", func(t *testing.T) {
-			testConversationStore_GetAllConversations_Since(t, conveygo.NewMemoryStore(), alias, key)
+		t.Run("From", func(t *testing.T) {
+			testConversationStore_GetAllConversations_From(t, conveygo.NewMemoryStore(), alias, key)
+		})
+		t.Run("To", func(t *testing.T) {
+			testConversationStore_GetAllConversations_To(t, conveygo.NewMemoryStore(), alias, key)
 		})
 	})
 	t.Run("GetRecentConversations", func(t *testing.T) {

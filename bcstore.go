@@ -233,18 +233,18 @@ func (s *BCStore) GetConversation(conversationHash []byte) (*Listing, error) {
 	return listing, nil
 }
 
-func (s *BCStore) GetAllConversations(since uint64) ([]*Listing, error) {
+func (s *BCStore) GetAllConversations(from, to uint64) ([]*Listing, error) {
 	conversations, err := s.Node.GetChannel(CONVEY_CONVERSATION)
 	if err != nil {
 		return nil, err
 	}
 	var listings []*Listing
 	if err := bcgo.Iterate(conversations.Name, conversations.Head, nil, s.Node.Cache, s.Node.Network, func(h []byte, b *bcgo.Block) error {
-		if b.Timestamp < since {
+		if b.Timestamp < from {
 			return bcgo.StopIterationError{}
 		}
 		for _, entry := range b.Entry {
-			if entry.Record.Timestamp >= since {
+			if entry.Record.Timestamp >= from && entry.Record.Timestamp <= to {
 				listing, err := ConversationEntryToListing(entry)
 				if err != nil {
 					return err

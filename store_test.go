@@ -164,7 +164,7 @@ func testConversationStore_GetConversation_NotExists(t *testing.T, s conveygo.Co
 
 func testConversationStore_GetAllConversations_Empty(t *testing.T, s conveygo.ConversationStore) {
 	t.Helper()
-	listings, err := s.GetAllConversations(uint64(0))
+	listings, err := s.GetAllConversations(uint64(0), bcgo.Timestamp())
 	testinggo.AssertNoError(t, err)
 	if len(listings) != 0 {
 		t.Errorf("Wrong listings; expected '%d', got '%d'", 0, len(listings))
@@ -185,17 +185,54 @@ func testConversationStore_GetAllConversations_NotEmpty(t *testing.T, s conveygo
 	})
 	testinggo.AssertNoError(t, err)
 	testinggo.AssertNoError(t, s.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
-	listings, err := s.GetAllConversations(uint64(0))
+	listings, err := s.GetAllConversations(uint64(0), timestamp)
 	testinggo.AssertNoError(t, err)
 	if len(listings) != 1 {
 		t.Errorf("Wrong listings; expected '%d', got '%d'", 1, len(listings))
-	}
-	if listings[0].Topic != expected {
+	} else if listings[0].Topic != expected {
 		t.Errorf("Wrong topic; expected '%s', got '%s'", expected, listings[0].Topic)
 	}
 }
 
-func testConversationStore_GetAllConversations_Since(t *testing.T, s conveygo.ConversationStore, alias string, key *rsa.PrivateKey) {
+func testConversationStore_GetAllConversations_From(t *testing.T, s conveygo.ConversationStore, alias string, key *rsa.PrivateKey) {
+	t.Helper()
+	{
+		timestamp := uint64(0)
+		conversationHash, conversationRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Conversation{
+			Topic: "Foo",
+		})
+		testinggo.AssertNoError(t, err)
+		messageHash, messageRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Message{
+			Content: []byte("Test123"),
+			Type:    conveygo.MediaType_TEXT_PLAIN,
+		})
+		testinggo.AssertNoError(t, err)
+		testinggo.AssertNoError(t, s.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
+	}
+	expected := "Bar"
+	{
+		timestamp := bcgo.Timestamp()
+		conversationHash, conversationRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Conversation{
+			Topic: expected,
+		})
+		testinggo.AssertNoError(t, err)
+		messageHash, messageRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Message{
+			Content: []byte("Test123"),
+			Type:    conveygo.MediaType_TEXT_PLAIN,
+		})
+		testinggo.AssertNoError(t, err)
+		testinggo.AssertNoError(t, s.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
+	}
+	listings, err := s.GetAllConversations(uint64(1), bcgo.Timestamp())
+	testinggo.AssertNoError(t, err)
+	if len(listings) != 1 {
+		t.Errorf("Wrong listings; expected '%d', got '%d'", 1, len(listings))
+	} else if listings[0].Topic != expected {
+		t.Errorf("Wrong topic; expected '%s', got '%s'", expected, listings[0].Topic)
+	}
+}
+
+func testConversationStore_GetAllConversations_To(t *testing.T, s conveygo.ConversationStore, alias string, key *rsa.PrivateKey) {
 	t.Helper()
 	expected := "Foo"
 	{
@@ -211,11 +248,10 @@ func testConversationStore_GetAllConversations_Since(t *testing.T, s conveygo.Co
 		testinggo.AssertNoError(t, err)
 		testinggo.AssertNoError(t, s.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
 	}
-	expected = "Bar"
 	{
 		timestamp := bcgo.Timestamp()
 		conversationHash, conversationRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Conversation{
-			Topic: expected,
+			Topic: "Bar",
 		})
 		testinggo.AssertNoError(t, err)
 		messageHash, messageRecord, err := conveygo.ProtoToRecord(alias, key, timestamp, &conveygo.Message{
@@ -225,12 +261,11 @@ func testConversationStore_GetAllConversations_Since(t *testing.T, s conveygo.Co
 		testinggo.AssertNoError(t, err)
 		testinggo.AssertNoError(t, s.NewConversation(conversationHash, conversationRecord, messageHash, messageRecord))
 	}
-	listings, err := s.GetAllConversations(uint64(1))
+	listings, err := s.GetAllConversations(uint64(0), uint64(2))
 	testinggo.AssertNoError(t, err)
 	if len(listings) != 1 {
 		t.Errorf("Wrong listings; expected '%d', got '%d'", 1, len(listings))
-	}
-	if listings[0].Topic != expected {
+	} else if listings[0].Topic != expected {
 		t.Errorf("Wrong topic; expected '%s', got '%s'", expected, listings[0].Topic)
 	}
 }
@@ -262,8 +297,7 @@ func testConversationStore_GetRecentConversations_NotEmpty(t *testing.T, s conve
 	testinggo.AssertNoError(t, err)
 	if len(listings) != 1 {
 		t.Errorf("Wrong listings; expected '%d', got '%d'", 1, len(listings))
-	}
-	if listings[0].Topic != expected {
+	} else if listings[0].Topic != expected {
 		t.Errorf("Wrong topic; expected '%s', got '%s'", expected, listings[0].Topic)
 	}
 }
@@ -302,8 +336,7 @@ func testConversationStore_GetRecentConversations_Limit(t *testing.T, s conveygo
 	testinggo.AssertNoError(t, err)
 	if len(listings) != 1 {
 		t.Errorf("Wrong listings; expected '%d', got '%d'", 1, len(listings))
-	}
-	if listings[0].Topic != expected {
+	} else if listings[0].Topic != expected {
 		t.Errorf("Wrong topic; expected '%s', got '%s'", expected, listings[0].Topic)
 	}
 }

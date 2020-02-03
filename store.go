@@ -31,7 +31,7 @@ const (
 type ConversationStore interface {
 	NewConversation(conversationHash []byte, conversationRecord *bcgo.Record, messageHash []byte, messageRecord *bcgo.Record) error
 	GetConversation(conversationHash []byte) (*Listing, error)
-	GetAllConversations(since uint64) ([]*Listing, error)
+	GetAllConversations(from, to uint64) ([]*Listing, error)
 	GetRecentConversations(limit uint) ([]*Listing, error)
 }
 

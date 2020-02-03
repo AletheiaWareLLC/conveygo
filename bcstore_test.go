@@ -151,8 +151,11 @@ func TestBCStore(t *testing.T) {
 		t.Run("NotEmpty", func(t *testing.T) {
 			testConversationStore_GetAllConversations_NotEmpty(t, makeBCStore(t, aliasA, keyA, dir), aliasB, keyB)
 		})
-		t.Run("Since", func(t *testing.T) {
-			testConversationStore_GetAllConversations_Since(t, makeBCStore(t, aliasA, keyA, dir), aliasB, keyB)
+		t.Run("From", func(t *testing.T) {
+			testConversationStore_GetAllConversations_From(t, makeBCStore(t, aliasA, keyA, dir), aliasB, keyB)
+		})
+		t.Run("To", func(t *testing.T) {
+			testConversationStore_GetAllConversations_To(t, makeBCStore(t, aliasA, keyA, dir), aliasB, keyB)
 		})
 	})
 	t.Run("GetRecentConversations", func(t *testing.T) {
