@@ -39,6 +39,8 @@ const (
 	CONVEY_PREFIX         = "Convey-"
 	CONVEY_PREFIX_MESSAGE = "Convey-Message-" // conveygo.Message Chain
 	CONVEY_PREFIX_TAG     = "Convey-Tag-"     // conveygo.Tag Chain
+
+	ERROR_UNRECOGNIZED_MEDIA_TYPE = "Unrecognized Media Type: %s"
 )
 
 func GetConveyHosts() []string {
