@@ -36,7 +36,7 @@ func makeNode(t *testing.T, alias string, key *rsa.PrivateKey) *bcgo.Node {
 		Alias:    alias,
 		Key:      key,
 		Cache:    bcgo.NewMemoryCache(1),
-		Network:  &bcgo.TcpNetwork{},
+		Network:  bcgo.NewTCPNetwork(),
 		Channels: make(map[string]*bcgo.Channel),
 	}
 	node.AddChannel(bcgo.OpenPoWChannel(conveygo.CONVEY_YEAR, bcgo.THRESHOLD_Z))

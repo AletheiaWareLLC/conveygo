@@ -24,9 +24,9 @@ if [ ! -f "$CORE_FONT_AFM_ZIP" ]; then
     curl -O "$CORE_FONT_AFM_ZIP_URL"
 fi
 
-go fmt $GOPATH/src/github.com/AletheiaWareLLC/{aliasgo,bcgo,bcnetgo,conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main,cryptogo,financego,netgo,pdfgo,pdfgo/font,pdfgo/graphics}
-go vet $GOPATH/src/github.com/AletheiaWareLLC/{aliasgo,bcgo,bcnetgo,conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main,cryptogo,financego,netgo,pdfgo,pdfgo/font,pdfgo/graphics}
-go test $GOPATH/src/github.com/AletheiaWareLLC/{aliasgo,bcgo,bcnetgo,conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main,cryptogo,financego,netgo,pdfgo,pdfgo/font,pdfgo/graphics}
+go fmt $GOPATH/src/github.com/AletheiaWareLLC/{conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main}
+go vet $GOPATH/src/github.com/AletheiaWareLLC/{conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main}
+go test $GOPATH/src/github.com/AletheiaWareLLC/{conveygo,conveygo/pdf,conveygo/pdf/graphics,conveygo/pdf/main}
 export ROOT_DIRECTORY=.
 export ALIAS=test-convey-digest
 export PASSWORD=password1234

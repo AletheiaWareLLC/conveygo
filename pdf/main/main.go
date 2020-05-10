@@ -160,9 +160,7 @@ func GetDigestEntries(host string) ([]*conveygo.DigestEntry, error) {
 	peers = append(peers, host)
 	log.Println("Peers:", peers)
 
-	network := &bcgo.TcpNetwork{
-		Peers: peers,
-	}
+	network := bcgo.NewTCPNetwork(peers...)
 
 	node, err := bcgo.GetNode(rootDir, cache, network)
 	if err != nil {

@@ -41,7 +41,7 @@ func makeBCStore(t *testing.T, alias string, key *rsa.PrivateKey, keystore strin
 			Alias:    alias,
 			Key:      key,
 			Cache:    bcgo.NewMemoryCache(1),
-			Network:  &bcgo.TcpNetwork{},
+			Network:  bcgo.NewTCPNetwork(),
 			Channels: make(map[string]*bcgo.Channel),
 		},
 		Listener: nil,
