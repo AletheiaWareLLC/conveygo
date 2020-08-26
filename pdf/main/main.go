@@ -169,11 +169,7 @@ func GetDigestEntries(host string) ([]*conveygo.DigestEntry, error) {
 
 	conversations := conveygo.OpenConversationChannel()
 
-	if err := conversations.LoadCachedHead(cache); err != nil {
-		log.Println(err)
-	}
-
-	if err := conversations.Pull(cache, network); err != nil {
+	if err := conversations.Refresh(cache, network); err != nil {
 		log.Println(err)
 	}
 
@@ -184,11 +180,7 @@ func GetDigestEntries(host string) ([]*conveygo.DigestEntry, error) {
 			name := conveygo.CONVEY_PREFIX_MESSAGE + base64.RawURLEncoding.EncodeToString(entry.RecordHash)
 			channel := bcgo.OpenPoWChannel(name, bcgo.THRESHOLD_G)
 
-			if err := channel.LoadCachedHead(cache); err != nil {
-				log.Println(err)
-			}
-
-			if err := channel.Pull(cache, network); err != nil {
+			if err := channel.Refresh(cache, network); err != nil {
 				log.Println(err)
 			}
 

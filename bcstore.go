@@ -116,11 +116,7 @@ func (s *BCStore) RegisterCustomer(alias string, key *rsa.PrivateKey, customerId
 		return err
 	}
 
-	if err := registrations.LoadCachedHead(s.Node.Cache); err != nil {
-		log.Println(err)
-	}
-
-	if err := registrations.Pull(s.Node.Cache, s.Node.Network); err != nil {
+	if err := registrations.Refresh(s.Node.Cache, s.Node.Network); err != nil {
 		log.Println(err)
 	}
 
